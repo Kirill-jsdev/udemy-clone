@@ -2,7 +2,7 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import * as z from "zod";
 import { api } from "../state/api";
-import { toast } from "sonner";
+// import { toast } from "sonner";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -288,10 +288,7 @@ export const customDataGridStyles = {
   },
 };
 
-export const createCourseFormData = (
-  data: CourseFormData,
-  sections: Section[]
-): FormData => {
+export const createCourseFormData = (data: CourseFormData, sections: Section[]): FormData => {
   const formData = new FormData();
   formData.append("title", data.courseTitle);
   formData.append("description", data.courseDescription);
@@ -312,11 +309,7 @@ export const createCourseFormData = (
   return formData;
 };
 
-export const uploadAllVideos = async (
-  localSections: Section[],
-  courseId: string,
-  getUploadVideoUrl: any
-) => {
+export const uploadAllVideos = async (localSections: Section[], courseId: string, getUploadVideoUrl: any) => {
   const updatedSections = localSections.map((section) => ({
     ...section,
     chapters: section.chapters.map((chapter) => ({
@@ -329,18 +322,10 @@ export const uploadAllVideos = async (
       const chapter = updatedSections[i].chapters[j];
       if (chapter.video instanceof File && chapter.video.type === "video/mp4") {
         try {
-          const updatedChapter = await uploadVideo(
-            chapter,
-            courseId,
-            updatedSections[i].sectionId,
-            getUploadVideoUrl
-          );
+          const updatedChapter = await uploadVideo(chapter, courseId, updatedSections[i].sectionId, getUploadVideoUrl);
           updatedSections[i].chapters[j] = updatedChapter;
         } catch (error) {
-          console.error(
-            `Failed to upload video for chapter ${chapter.chapterId}:`,
-            error
-          );
+          console.error(`Failed to upload video for chapter ${chapter.chapterId}:`, error);
         }
       }
     }
@@ -349,12 +334,7 @@ export const uploadAllVideos = async (
   return updatedSections;
 };
 
-async function uploadVideo(
-  chapter: Chapter,
-  courseId: string,
-  sectionId: string,
-  getUploadVideoUrl: any
-) {
+async function uploadVideo(chapter: Chapter, courseId: string, sectionId: string, getUploadVideoUrl: any) {
   const file = chapter.video as File;
 
   try {
@@ -373,16 +353,11 @@ async function uploadVideo(
       },
       body: file,
     });
-    toast.success(
-      `Video uploaded successfully for chapter ${chapter.chapterId}`
-    );
+    toast.success(`Video uploaded successfully for chapter ${chapter.chapterId}`);
 
     return { ...chapter, video: videoUrl };
   } catch (error) {
-    console.error(
-      `Failed to upload video for chapter ${chapter.chapterId}:`,
-      error
-    );
+    console.error(`Failed to upload video for chapter ${chapter.chapterId}:`, error);
     throw error;
   }
 }
