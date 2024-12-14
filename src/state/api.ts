@@ -1,8 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { BaseQueryApi, FetchArgs } from "@reduxjs/toolkit/query";
 import { User } from "@clerk/nextjs/server";
-// import { Clerk } from "@clerk/clerk-js";
-// import { toast } from "sonner";
+import { Clerk } from "@clerk/clerk-js";
+import { toast } from "sonner";
 
 const customBaseQuery = async (args: string | FetchArgs, api: BaseQueryApi, extraOptions: any) => {
   const baseQuery = fetchBaseQuery({
@@ -70,8 +70,8 @@ export const api = createApi({
     COURSES
     =============== 
     */
-    getCourses: build.query<Course[], { category?: string }>({
-      query: ({ category }) => ({
+    getCourses: build.query<Course[], string | void>({
+      query: (category) => ({
         url: "courses",
         params: { category },
       }),
